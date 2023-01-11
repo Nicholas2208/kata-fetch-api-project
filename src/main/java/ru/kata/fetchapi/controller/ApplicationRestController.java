@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.kata.fetchapi.exception.UserNotFoundException;
 import ru.kata.fetchapi.model.Role;
 import ru.kata.fetchapi.model.User;
+import ru.kata.fetchapi.service.RoleService;
 import ru.kata.fetchapi.service.UserService;
 
 import java.util.List;
@@ -15,19 +16,22 @@ import java.util.List;
 @RequestMapping("/api")
 public class ApplicationRestController {
     private UserService userService;
+    private RoleService roleService;
 
-    public ApplicationRestController(UserService userService) {
+    public ApplicationRestController(UserService userService,
+                                     RoleService roleService) {
         this.userService = userService;
+        this.roleService = roleService;
     }
 
     @GetMapping("/users")
-    public List<User> findAllUsers() {
-        return userService.findAllUsers();
+    public ResponseEntity<List<User>> findAllUsers() {
+        return ResponseEntity.ok(userService.findAllUsers());
     }
 
     @GetMapping("/roles")
-    public List<Role> findRoles() {
-        return userService.findRoles();
+    public ResponseEntity<Iterable<Role>> findRoles() {
+        return ResponseEntity.ok(roleService.getAllRoles());
     }
 
     @PostMapping("/users")
@@ -38,9 +42,9 @@ public class ApplicationRestController {
     }
 
     @GetMapping("/users/{id}")
-    public User findById(@PathVariable Long id) throws UserNotFoundException {
-        return userService.findById(id)
-                .orElseThrow(() -> new UserNotFoundException(id));
+    public ResponseEntity<User> findById(@PathVariable Long id) throws UserNotFoundException {
+        return ResponseEntity.ok(userService.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id)));
     }
 
     @PutMapping("/users")
@@ -52,6 +56,6 @@ public class ApplicationRestController {
     @DeleteMapping("/users/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         userService.deleteUser(id);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

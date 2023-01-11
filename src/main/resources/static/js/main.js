@@ -277,7 +277,6 @@ async function clearForm() {
 async function loadAddForm() {
     $('#roles').empty();
 
-    //$('.invalid-feedback').remove();
     $('#firstName').removeClass('is-invalid');
     $('#firstName').val('');
     $('#lastName').removeClass('is-invalid');

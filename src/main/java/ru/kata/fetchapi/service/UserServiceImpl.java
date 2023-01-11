@@ -5,6 +5,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kata.fetchapi.exception.UserAlreadyExistsException;
 import ru.kata.fetchapi.model.Role;
 import ru.kata.fetchapi.model.User;
@@ -29,16 +30,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<User> findAllUsers() {
         return userRepository.findAll();
     }
 
     @Override
-    public List<Role> findRoles() {
-        return roleRepository.findAll();
-    }
-
-    @Override
+    @Transactional
     public void save(User user) {
         String email = user.getEmail();
 
@@ -51,11 +49,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<User> findById(Long id) {
         return userRepository.findById(id);
     }
 
     @Override
+    @Transactional
     public User updateUser(User user) {
         String oldPassword = user.getPassword();
         user.setPassword(user.getPassword().isEmpty() ?
@@ -66,11 +66,13 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional
     public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByEmail(username);
 

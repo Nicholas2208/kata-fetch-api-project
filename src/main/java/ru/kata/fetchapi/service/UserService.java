@@ -8,7 +8,6 @@ import java.util.Optional;
 
 public interface UserService {
     List<User> findAllUsers();
-    List<Role> findRoles();
     void save(User user);
 
     Optional<User> findById(Long id);

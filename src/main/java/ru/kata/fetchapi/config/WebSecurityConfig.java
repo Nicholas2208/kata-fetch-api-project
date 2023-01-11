@@ -22,7 +22,7 @@ public class WebSecurityConfig {
         http
                 .csrf().disable()
                 .authorizeHttpRequests()
-                //.requestMatchers("/user").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/user").hasAnyRole("USER", "ADMIN")
                 .requestMatchers("/admin/").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
